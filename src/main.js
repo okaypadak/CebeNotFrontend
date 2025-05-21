@@ -7,7 +7,7 @@ import axios from 'axios'
 
 createApp(App).use(router).mount('#app')
 
-axios.defaults.baseURL = import.meta.env.SERVER_URL
+axios.defaults.baseURL = import.meta.env.VITE_SERVER_URL
 
 axios.interceptors.request.use((config) => {
   const token = localStorage.getItem('token')
