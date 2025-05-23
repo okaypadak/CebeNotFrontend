@@ -49,7 +49,10 @@ async function login() {
       body: { username: username.value, password: password.value }
     })
 
-    localStorage.setItem('token', res.token)
+    // Giriş başarılıysa cookie olarak işaretle
+    document.cookie = 'user_logged_in=true; path=/'
+
+    // /period sayfasına yönlendir
     router.push('/period')
   } catch (err) {
     error.value = 'Giriş başarısız. Bilgileri kontrol edin.'
