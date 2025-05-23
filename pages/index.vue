@@ -35,6 +35,13 @@ const password = ref('')
 const error = ref('')
 const router = useRouter()
 
+onMounted(() => {
+  const cookie = useCookie('user_logged_in')
+  if (cookie.value === 'true') {
+    navigateTo('/period')
+  }
+})
+
 async function login() {
   try {
     const res = await $fetch('/api/login', {

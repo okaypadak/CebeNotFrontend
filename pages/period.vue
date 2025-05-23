@@ -4,3 +4,8 @@
     <p>Giriş başarılı, burası yönlendirme sonrası açılan dönem sayfasıdır.</p>
   </div>
 </template>
+<script setup>
+definePageMeta({
+  middleware: 'auth'
+})
+</script>
