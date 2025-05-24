@@ -25,40 +25,57 @@
     </div>
 </template>
 
-<script setup>
-import { ref } from 'vue'
-import axios from 'axios'
-import { useRouter } from 'vue-router'
+<script setup lang="ts">
+import { ref, nextTick } from 'vue'
+import { useRouter, } from 'vue-router'
 
-const username = ref('')
-const password = ref('')
-const error = ref('')
+const username = ref<string>('')
+const password = ref<string>('')
+const error = ref<string>('')
+
 const router = useRouter()
 
-onMounted(() => {
-  const cookie = useCookie('user_logged_in')
-  if (cookie.value === 'true') {
-    navigateTo('/period')
-  }
-})
+// onMounted(() => {
+//   const cookie = useCookie('user_logged_in')
+//   if (cookie.value === 'true') {
+//     router.push('/giderDonemler')
+//   }
+// })
 
-async function login() {
+interface LoginResponse {
+  statusCode: number
+  message?: string
+}
+
+async function login(): Promise<void> {
   try {
-    const res = await $fetch('/api/login', {
+    const res = await $fetch<LoginResponse>('/api/login', {
       method: 'POST',
-      body: { username: username.value, password: password.value }
+      body: {
+        username: username.value,
+        password: password.value
+      }
     })
 
-    // Giriş başarılıysa cookie olarak işaretle
-    document.cookie = 'user_logged_in=true; path=/'
+    console.log("kullanici:"+res.userId)
 
-    // /period sayfasına yönlendir
-    router.push('/period')
+    if (res.statusCode === 200) {
+      localStorage.setItem('userId', res.userId) // 🌟 userId'yi sakla
+      await nextTick()
+      router.push('/giderDonemler')
+    } else if (res.statusCode === 401) {
+      error.value = res.message || 'Kullanıcı adı veya şifre hatalı'
+    } else {
+      error.value = res.message || 'Bilinmeyen hata oluştu'
+    }
+
   } catch (err) {
-    error.value = 'Giriş başarısız. Bilgileri kontrol edin.'
+    console.error('İstek hatası:', err)
+    error.value = 'Sunucuya erişilemiyor. Lütfen daha sonra tekrar deneyin.'
   }
 }
 </script>
+
 
 <style scoped>
 @reference 'tailwindcss';
@@ -67,4 +84,4 @@ async function login() {
     @apply w-full px-4 py-2.5 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-sky-500 transition;
 }
 </style>
-  
+

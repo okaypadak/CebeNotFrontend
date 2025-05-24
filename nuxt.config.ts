@@ -4,7 +4,9 @@ export default defineNuxtConfig({
   compatibilityDate: "2025-05-15",
   devtools: { enabled: true },
   css: ["~/assets/css/main.css"],
-  vite: { plugins: [tailwindcss()] },
+  vite: {
+    plugins: [tailwindcss()],
+  },
   modules: [
     "@nuxt/content",
     "@nuxt/eslint",
@@ -14,4 +16,9 @@ export default defineNuxtConfig({
     "@nuxt/scripts",
     "@nuxt/ui",
   ],
+  runtimeConfig: {
+    public: {
+      apiBaseUrl: process.env.API_BASE_URL || "http://localhost:9921",
+    },
+  },
 });

@@ -1,8 +1,7 @@
 export default defineNuxtRouteMiddleware(() => {
-  if (process.client) {
-    const isLoggedIn = document.cookie.includes('user_logged_in=true')
-    if (!isLoggedIn) {
-      return navigateTo('/')
-    }
+  const cookie = useCookie('user_logged_in')
+  console.log("kontrol: "+cookie.value)
+  if (!cookie.value) {
+    return navigateTo('/')
   }
 })
