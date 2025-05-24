@@ -1,12 +1,11 @@
 import {defineEventHandler, getRouterParams} from 'h3'
-import {ofetch} from 'ofetch'
 
 export default defineEventHandler(async (event) => {
     const config = useRuntimeConfig()
     const { id } = getRouterParams(event)
 
     try {
-        return await ofetch(`${config.public.apiBaseUrl}/api/appointments/${id}`, {
+        return await $fetch(`${config.public.apiBaseUrl}/api/appointments/${id}`, {
             method: 'DELETE'
         })
     } catch (err) {

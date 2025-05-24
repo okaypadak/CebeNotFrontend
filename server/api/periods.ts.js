@@ -1,12 +1,11 @@
-import {defineEventHandler, readBody, useRuntimeConfig} from 'h3'
-import {ofetch} from 'ofetch'
+import {defineEventHandler, readBody} from 'h3'
 
 export default defineEventHandler(async (event) => {
     const config = useRuntimeConfig()
     const body = await readBody(event)
 
     try {
-        return await ofetch(`${config.public.apiBase}/periods`, {
+        return await $fetch(`${config.public.apiBase}/periods`, {
             method: 'POST',
             body
         })

@@ -1,12 +1,11 @@
 import {defineEventHandler, getQuery} from 'h3'
-import {ofetch} from 'ofetch'
 
 export default defineEventHandler(async (event) => {
     const config = useRuntimeConfig()
     const query = getQuery(event) // ⬅️ userId buradan alınır
 
     try {
-        return await ofetch(`${config.public.apiBaseUrl}/api/periods`, {
+        return await $fetch(`${config.public.apiBaseUrl}/api/periods`, {
             method: 'GET',
             params: {
                 userId: query.userId

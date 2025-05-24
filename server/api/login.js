@@ -1,12 +1,11 @@
 import { defineEventHandler, readBody, setCookie } from 'h3'
-import { ofetch } from 'ofetch'
 
 export default defineEventHandler(async (event) => {
   const config = useRuntimeConfig()
   const body = await readBody(event)
 
   try {
-    const res = await ofetch(`${config.public.apiBaseUrl}/api/login`, {
+    const res = await $fetch(`${config.public.apiBaseUrl}/api/login`, {
       method: 'POST',
       body
     })
