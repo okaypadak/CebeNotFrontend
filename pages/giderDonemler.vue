@@ -30,7 +30,6 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import axios from 'axios'
-import { useRouter } from 'vue-router'
 import Navbar from '/pages/components/Navbar.vue'
 
 /**
@@ -42,8 +41,6 @@ const newPeriod = ref('')
  * @type {import('vue').Ref<Array<{ _id: string, period: string, members?: string[] }>>}
  */
 const periods = ref([])
-
-const router = useRouter()
 
 definePageMeta({
   middleware: ['auth']
@@ -66,8 +63,6 @@ async function fetchPeriods() {
       params: { userId }
     })
 
-    console.log('Gelen veri:', res)
-
     if (Array.isArray(res)) {
       periods.value = res.sort((a, b) => b.period.localeCompare(a.period))
     } else {
@@ -86,14 +81,17 @@ async function addPeriod() {
   if (!newPeriod.value.trim()) return
 
   try {
-    await axios.post('/periods', {
-      period: newPeriod.value.trim()
+    await $fetch('/api/periods', {
+      method: 'POST',
+      body: {
+        period: newPeriod.value.trim()
+      }
     })
 
     newPeriod.value = ''
     await fetchPeriods()
   } catch (err) {
-    console.error('Dönem eklenirken hata:', err.response?.data || err.message)
+    console.error('Dönem eklenirken hata:', err?.data || err.message)
   }
 }
 

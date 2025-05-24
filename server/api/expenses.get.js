@@ -1,5 +1,5 @@
 import {defineEventHandler, getQuery} from 'h3'
-import {$fetch} from 'ofetch'
+import {$fetch, ofetch} from 'ofetch'
 
 export default defineEventHandler(async (event) => {
     const config = useRuntimeConfig()
@@ -8,17 +8,15 @@ export default defineEventHandler(async (event) => {
     console.log("periodId:"+query.period)
 
     try {
-        // Access the period correctly
-        return await $fetch(`${config.public.apiBaseUrl}/api/expenses`, {
+        return await ofetch(`${config.public.apiBaseUrl}/api/expenses`, {
             method: 'GET',
             params: {
-                period: query.period // Accessing the query parameter directly
+                period: query.period
             }
         })
     } catch (err) {
         console.error('Express API hata:', err)
 
-        // Return a proper error response
         return {
             statusCode: err?.response?.status || 500,  // Handle possible undefined response
             message: err?.response?.data?.message || 'Sunucu hatası'  // Default message if no specific error
