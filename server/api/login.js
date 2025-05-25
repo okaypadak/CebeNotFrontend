@@ -1,21 +1,22 @@
 import { defineEventHandler, readBody, setCookie } from 'h3'
+import {ofetch} from 'ofetch'
 
 export default defineEventHandler(async (event) => {
   const config = useRuntimeConfig()
   const body = await readBody(event)
 
   try {
-    const res = await $fetch(`${config.public.apiBaseUrl}/api/login`, {
+    const res = await ofetch(`${config.public.apiBaseUrl}/api/login`, {
       method: 'POST',
       body
     })
 
     setCookie(event, 'user_logged_in', 'true', {
-      httpOnly: false,
+      httpOnly: true,       // 🛡️ JavaScript erişemez → güvenlik şart
       path: '/',
-      maxAge: 60 * 60,
-      sameSite: 'strict',
-      secure: false
+      maxAge: 60 * 60,       // 1 saat
+      sameSite: 'lax',       // form gönderimleri çalışır
+      secure: false          // ❗ HTTP bağlantılarda çalışabilsin diye
     })
 
     // setCookie(event, 'user_logged_in', 'true', {
