@@ -10,11 +10,10 @@ export default defineEventHandler(async (event) => {
       body
     })
 
-    // 🟢 Cookie ayarla (sunucu taraflı güvenli oturum için)
     setCookie(event, 'user_logged_in', 'true', {
       httpOnly: false,
       path: '/',
-      maxAge: 60 * 60,       // 1 saat
+      maxAge: 60 * 60,
       sameSite: 'strict',
       secure: false
     })
