@@ -26,7 +26,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, nextTick } from 'vue'
+import { ref } from 'vue'
 import { useRouter, } from 'vue-router'
 
 const username = ref<string>('')
@@ -51,7 +51,9 @@ async function login(): Promise<void> {
     })
 
     if (res.statusCode === 200) {
-      user.value = res.user  // 👈 Global user state set edildi
+
+      console.log(res.userId)
+      user.value = res.userId
       router.push('/giderDonemler')
     } else if (res.statusCode === 401) {
       error.value = res.message || 'Kullanıcı adı veya şifre hatalı'

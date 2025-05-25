@@ -90,6 +90,12 @@ import { $fetch } from 'ofetch'
 import AddModal from '../pages/components/randevuEkle.vue'
 import Navbar from '../pages/components/Navbar.vue'
 
+definePageMeta({
+  middleware: ['auth']
+})
+
+const user = useState('user')
+
 // Tip tanımları
 interface Expense {
   _id: string;
@@ -140,6 +146,7 @@ async function handleAddExpense(data: Expense) {
   try {
     const payload = {
       ...data,
+      userId: user.value.id,
       period: selectedPeriodId.value
     }
     await $fetch('/api/expenses', {
