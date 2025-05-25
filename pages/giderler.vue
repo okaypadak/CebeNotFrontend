@@ -83,10 +83,6 @@
 </template>
 
 <script setup lang="ts">
-definePageMeta({
-  middleware: ['auth'],
-  title: 'Dashboard'
-})
 
 import { onMounted, ref, computed } from 'vue'
 import { useRoute } from 'vue-router'

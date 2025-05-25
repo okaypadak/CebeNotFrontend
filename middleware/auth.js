@@ -1,7 +1,7 @@
+// middleware/auth.ts
 export default defineNuxtRouteMiddleware(() => {
-  const cookie = useCookie('user_logged_in')
-  console.log("kontrol: "+cookie.value)
-  if (!cookie.value) {
+  const user = useState('user') // veya useAuthStore()
+  if (!user.value || !user.value.id) {
     return navigateTo('/')
   }
 })

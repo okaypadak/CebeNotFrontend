@@ -32,7 +32,7 @@ import { useRouter, } from 'vue-router'
 const username = ref<string>('')
 const password = ref<string>('')
 const error = ref<string>('')
-
+const user = useState('user')  // 🔥 Global kullanıcı state'i
 const router = useRouter()
 
 // onMounted(() => {
@@ -57,11 +57,10 @@ async function login(): Promise<void> {
       }
     })
 
-    console.log("kullanici:"+res.userId)
-
     if (res.statusCode === 200) {
+      console.log("kullanici:"+res.userId)
       localStorage.setItem('userId', res.userId) // 🌟 userId'yi sakla
-      await nextTick()
+      user.value = res.user  // 👈 Global user state set edildi
       router.push('/giderDonemler')
     } else if (res.statusCode === 401) {
       error.value = res.message || 'Kullanıcı adı veya şifre hatalı'

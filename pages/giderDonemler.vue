@@ -29,7 +29,6 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
-import axios from 'axios'
 import Navbar from '/pages/components/Navbar.vue'
 
 /**
@@ -41,10 +40,6 @@ const newPeriod = ref('')
  * @type {import('vue').Ref<Array<{ _id: string, period: string, members?: string[] }>>}
  */
 const periods = ref([])
-
-definePageMeta({
-  middleware: ['auth']
-})
 
 /**
  * Dönemleri getirir
