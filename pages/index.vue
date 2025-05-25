@@ -35,13 +35,6 @@ const error = ref<string>('')
 const user = useState('user')  // 🔥 Global kullanıcı state'i
 const router = useRouter()
 
-// onMounted(() => {
-//   const cookie = useCookie('user_logged_in')
-//   if (cookie.value === 'true') {
-//     router.push('/giderDonemler')
-//   }
-// })
-
 interface LoginResponse {
   statusCode: number
   message?: string
@@ -58,8 +51,6 @@ async function login(): Promise<void> {
     })
 
     if (res.statusCode === 200) {
-      console.log("kullanici:"+res.userId)
-      localStorage.setItem('userId', res.userId) // 🌟 userId'yi sakla
       user.value = res.user  // 👈 Global user state set edildi
       router.push('/giderDonemler')
     } else if (res.statusCode === 401) {

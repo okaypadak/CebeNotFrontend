@@ -21,8 +21,8 @@
 </template>
 
 <script setup lang="ts">
-import { useRoute, navigateTo, useCookie } from '#imports'
-
+import { useRoute, navigateTo } from '#imports'
+const user = useState('user')  // 🔥 Global kullanıcı state'i
 const route = useRoute()
 
 // Linke uygun stil döndür
@@ -40,10 +40,7 @@ function goTo(path: string): void {
 
 // Çıkış işlemi
 function logout(): void {
-  const token = useCookie<string | null>('token')
-  const loggedIn = useCookie<string | null>('user_logged_in')
-  token.value = null
-  loggedIn.value = null
+  user.value = null  // 🧹 Global kullanıcı bilgisini temizle
   navigateTo('/')
 }
 </script>
