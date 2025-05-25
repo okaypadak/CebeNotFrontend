@@ -7,7 +7,7 @@ export default defineEventHandler(async (event) => {
     console.log("periodId:"+query.period)
 
     try {
-        return await $fetch(`${config.public.apiBaseUrl}/api/expenses`, {
+        return await $fetch(`${config.apiBaseUrl}/api/expenses`, {
             method: 'GET',
             params: {
                 period: query.period

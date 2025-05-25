@@ -17,8 +17,6 @@ export default defineNuxtConfig({
     "@nuxt/ui",
   ],
   runtimeConfig: {
-    public: {
-      apiBaseUrl: process.env.API_BASE_URL || "cebenotbackend.railway.internal",
-    },
+    apiBaseUrl: process.env.API_BASE_URL || "cebenotbackend.railway.internal",
   },
 });

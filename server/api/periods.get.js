@@ -5,7 +5,7 @@ export default defineEventHandler(async (event) => {
     const query = getQuery(event) // ⬅️ userId buradan alınır
 
     try {
-        return await $fetch(`${config.public.apiBaseUrl}/api/periods`, {
+        return await $fetch(`${config.apiBaseUrl}/api/periods`, {
             method: 'GET',
             params: {
                 userId: query.userId

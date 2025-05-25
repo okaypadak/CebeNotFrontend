@@ -5,7 +5,7 @@ export default defineEventHandler(async (event) => {
     const body = await readBody(event)
 
     try {
-        return await $fetch(`${config.public.apiBaseUrl}/api/appointments`, {
+        return await $fetch(`${config.apiBaseUrl}/api/appointments`, {
             method: 'POST',
             body
         })

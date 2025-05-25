@@ -5,7 +5,7 @@ export default defineEventHandler(async (event) => {
     const body = await readBody(event)
 
     try {
-        return await $fetch(`${config.public.apiBase}/periods`, {
+        return await $fetch(`${config.apiBase}/periods`, {
             method: 'POST',
             body
         })

@@ -4,7 +4,7 @@ export default defineEventHandler(async (event) => {
     const config = useRuntimeConfig()
 
     try {
-        return await $fetch(`${config.public.apiBaseUrl}/api/appointmentsEvents`, {
+        return await $fetch(`${config.apiBaseUrl}/api/appointmentsEvents`, {
             method: 'GET'
         }) // event listesi
     } catch (err) {

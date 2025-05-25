@@ -6,7 +6,7 @@ export default defineEventHandler(async (event) => {
   const body = await readBody(event)
 
   try {
-    const res = await ofetch(`${config.public.apiBaseUrl}/api/login`, {
+    const res = await ofetch(`${config.apiBaseUrl}/api/login`, {
       method: 'POST',
       body
     })
@@ -14,7 +14,6 @@ export default defineEventHandler(async (event) => {
     return {
       statusCode: 200,
       message: 'İşlem başarılı',
-      token: res.token,
       userId: res.userId
     }
 
