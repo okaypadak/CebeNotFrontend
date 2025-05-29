@@ -3,12 +3,15 @@ import {ofetch} from 'ofetch'
 
 export default defineEventHandler(async (event) => {
     const config = useRuntimeConfig()
-    const body = await readBody(event)
+    const { id } = getRouterParams(event)
+    const headers = getRequestHeaders(event)
 
     try {
-        return await ofetch(`${config.apiBaseUrl}/api/appointments`, {
-            method: 'POST',
-            body
+        return await ofetch(`${config.apiBaseUrl}/api/expenses/${id}`, {
+            method: 'DELETE',
+            headers: {
+                Authorization: headers.authorization || ''
+            },
         })
 
     } catch (err) {

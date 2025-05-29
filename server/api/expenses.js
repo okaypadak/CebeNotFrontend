@@ -5,10 +5,14 @@ export default defineEventHandler(async (event) => {
     try {
         const body = await readBody(event)
         const config = useRuntimeConfig()
+        const headers = getRequestHeaders(event)
 
-        // Express backend'e yönlendirme
+
         const response = await ofetch(`${config.apiBaseUrl}/api/expenses`, {
             method: 'POST',
+            headers: {
+                Authorization: headers.authorization || ''
+            },
             body,
         })
 

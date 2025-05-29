@@ -84,15 +84,15 @@
 
 <script setup lang="ts">
 
+definePageMeta({
+  middleware: ['auth']
+})
+
 import { onMounted, ref, computed } from 'vue'
 import { useRoute } from 'vue-router'
 import { $fetch } from 'ofetch'
 import AddModal from '../pages/components/randevuEkle.vue'
 import Navbar from '../pages/components/Navbar.vue'
-
-definePageMeta({
-  middleware: ['auth']
-})
 
 const user = useState('user')
 
@@ -108,7 +108,7 @@ interface Expense {
 const route = useRoute()
 const expenses = ref<Expense[]>([])
 const showModal = ref(false)
-
+const token = useState<string>('user')
 const selectedPeriodId = ref<string>((route.query.periodId || '').toString())
 const selectedPeriodName = ref<string>((route.query.period || '').toString())
 
@@ -118,6 +118,9 @@ async function fetchExpenses() {
   try {
     const response = await $fetch<Expense[]>('/api/expenses', {
       method: 'GET',
+      headers: {
+        Authorization: `Bearer ${token.value}`
+      },
       params: { period: selectedPeriodId.value }
     })
     expenses.value = response
@@ -133,7 +136,10 @@ async function deleteExpense(id: string) {
 
   try {
     await $fetch(`/api/expenses/${id}`, {
-      method: 'DELETE'
+      method: 'DELETE',
+      headers: {
+        Authorization: `Bearer ${token.value}`
+      },
     });
     await fetchExpenses();
   } catch (error: any) {
@@ -146,11 +152,13 @@ async function handleAddExpense(data: Expense) {
   try {
     const payload = {
       ...data,
-      userId: user.value.id,
       period: selectedPeriodId.value
     }
     await $fetch('/api/expenses', {
       method: 'POST',
+      headers: {
+        Authorization: `Bearer ${token.value}`
+      },
       body: payload
     })
     await fetchExpenses()

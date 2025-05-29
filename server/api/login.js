@@ -11,10 +11,12 @@ export default defineEventHandler(async (event) => {
       body
     })
 
+    console.log("token:" + res.token);
+
     return {
       statusCode: 200,
       message: 'İşlem başarılı',
-      userId: res.userId
+      token: res.token
     }
 
   } catch (error) {

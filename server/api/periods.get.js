@@ -1,12 +1,19 @@
-import {defineEventHandler, getQuery} from 'h3'
+import { defineEventHandler, getQuery, getHeaders } from 'h3'
+import { ofetch } from 'ofetch'
 
 export default defineEventHandler(async (event) => {
     const config = useRuntimeConfig()
-    const query = getQuery(event) // ⬅️ userId buradan alınır
+    const query = getQuery(event)
+    const headers = getHeaders(event)
+
+    const token = headers.authorization
 
     try {
-        return await $fetch(`${config.apiBaseUrl}/api/periods`, {
+        return await ofetch(`${config.apiBaseUrl}/api/periods`, {
             method: 'GET',
+            headers: {
+                Authorization: token
+            },
             params: {
                 userId: query.userId
             }

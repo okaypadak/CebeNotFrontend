@@ -1,10 +1,11 @@
 import {defineEventHandler} from 'h3'
+import {ofetch} from 'ofetch'
 
 export default defineEventHandler(async (event) => {
     const config = useRuntimeConfig()
 
     try {
-        return await $fetch(`${config.apiBaseUrl}/api/appointmentsEvents`, {
+        return await ofetch(`${config.apiBaseUrl}/api/appointmentsEvents`, {
             method: 'GET'
         }) // event listesi
     } catch (err) {

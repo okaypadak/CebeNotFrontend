@@ -27,35 +27,32 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
+
+definePageMeta({
+  middleware: ['auth']
+})
+
 import { ref, onMounted } from 'vue'
 import Navbar from '/pages/components/Navbar.vue'
 
-/**
- * @type {import('vue').Ref<string>}
- */
-const newPeriod = ref('')
+// 🟢 Tip tanımlamaları
+interface Period {
+  _id: string
+  period: string
+}
 
-/**
- * @type {import('vue').Ref<Array<{ _id: string, period: string, members?: string[] }>>}
- */
-const periods = ref([])
+const newPeriod = ref<string>('')
+const periods = ref<Period[]>([])
+const token = useState<string>('user')
 
-/**
- * Dönemleri getirir
- */
-async function fetchPeriods() {
+async function fetchPeriods(): Promise<void> {
   try {
-    const userId = localStorage.getItem('userId')
-
-    if (!userId) {
-      console.warn('userId bulunamadı.')
-      return
-    }
-
-    const res = await $fetch('/api/periods', {
+    const res = await $fetch<Period[]>('/api/periods', {
       method: 'GET',
-      params: { userId }
+      headers: {
+        Authorization: `Bearer ${token.value}`
+      }
     })
 
     if (Array.isArray(res)) {
@@ -63,21 +60,21 @@ async function fetchPeriods() {
     } else {
       console.error('Beklenmeyen veri yapısı:', res)
     }
-  } catch (err) {
+  } catch (err: any) {
     const msg = err?.data?.message || err?.message || 'Bilinmeyen hata'
     console.error('Dönemleri getirirken hata:', msg)
   }
 }
 
-/**
- * Yeni dönem ekler
- */
-async function addPeriod() {
+async function addPeriod(): Promise<void> {
   if (!newPeriod.value.trim()) return
 
   try {
     await $fetch('/api/periods', {
       method: 'POST',
+      headers: {
+        Authorization: `Bearer ${token.value}`
+      },
       body: {
         period: newPeriod.value.trim()
       }
@@ -85,17 +82,13 @@ async function addPeriod() {
 
     newPeriod.value = ''
     await fetchPeriods()
-  } catch (err) {
+  } catch (err: any) {
     console.error('Dönem eklenirken hata:', err?.data || err.message)
   }
 }
 
-/**
- * Giderler sayfasına yönlendirir
- * @param {{ _id: string, period: string }} periodObj
- */
-function goToDashboard(periodObj) {
-  return navigateTo({
+function goToDashboard(periodObj: Period): void {
+  navigateTo({
     name: 'giderler',
     query: {
       periodId: periodObj._id,
@@ -104,6 +97,5 @@ function goToDashboard(periodObj) {
   })
 }
 
-// İlk yüklendiğinde dönemleri getir
 onMounted(fetchPeriods)
 </script>

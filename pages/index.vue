@@ -32,12 +32,13 @@ import { useRouter, } from 'vue-router'
 const username = ref<string>('')
 const password = ref<string>('')
 const error = ref<string>('')
-const user = useState('user')  // 🔥 Global kullanıcı state'i
+const user = useState('user')
 const router = useRouter()
 
 interface LoginResponse {
   statusCode: number
   message?: string
+  token?: string
 }
 
 async function login(): Promise<void> {
@@ -52,8 +53,8 @@ async function login(): Promise<void> {
 
     if (res.statusCode === 200) {
 
-      console.log(res.userId)
-      user.value = res.userId
+      console.log(res.token)
+      user.value = res.token
       router.push('/giderDonemler')
     } else if (res.statusCode === 401) {
       error.value = res.message || 'Kullanıcı adı veya şifre hatalı'
