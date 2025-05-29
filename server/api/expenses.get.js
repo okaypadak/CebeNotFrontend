@@ -6,9 +6,6 @@ export default defineEventHandler(async (event) => {
     const query = getQuery(event)
     const headers = getRequestHeaders(event)
 
-    console.log("🔍 [Nuxt API] İstenen periodId:", query.period)
-    console.log("📥 [Nuxt API] Gelen Authorization Header:", headers.authorization)
-
     try {
         return await ofetch(`${config.apiBaseUrl}/api/expenses`, {
             method: 'GET',
