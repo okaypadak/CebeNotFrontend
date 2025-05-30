@@ -1,86 +1,102 @@
 <template>
-  <div class="p-6 bg-gray-100 min-h-screen">
-    <Navbar />
-    <h1 class="text-3xl font-bold text-gray-800 mb-6">
-      Gider Defteri Dashboard - {{ selectedPeriodName }}
-    </h1>
+  <div class="min-h-screen bg-sky-100 flex flex-col px-4">
+    <!-- ✅ Navbar -->
+    <header>
+      <Navbar />
+    </header>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-      <!-- Toplam Gider -->
-      <div class="bg-gradient-to-r from-red-500 to-red-700 text-white p-6 rounded-2xl shadow-lg">
-        <h2 class="text-xl font-semibold mb-2 flex items-center">💸 Toplam Gider</h2>
-        <p class="text-4xl font-bold">{{ totalAmount.toFixed(2) }} ₺</p>
-      </div>
+    <!-- ✅ İçerik Alanı -->
+    <main class="flex-grow flex items-start justify-center px-4 py-8">
+      <div class="w-full max-w-5xl bg-white rounded-3xl shadow-2xl p-8 space-y-6">
 
-      <!-- Kategori Bazlı Giderler -->
-      <div class="bg-white p-6 rounded-2xl shadow-lg">
-        <h2 class="text-xl font-semibold text-gray-700 mb-4">📊 Kategoriye Göre Giderler</h2>
-        <ul class="space-y-1 text-gray-600">
-          <li
-              v-for="(amount, category) in categoryTotals"
-              :key="category"
-              class="flex justify-between border-b border-gray-200 py-1"
+        <!-- Sayfa Başlığı -->
+        <div class="text-center">
+          <h1 class="text-3xl font-bold text-sky-700">
+            Gider Defteri – {{ selectedPeriodName }}
+          </h1>
+          <p class="text-gray-600 text-sm mt-1">Döneme ait harcamalar, kategoriler ve detaylar</p>
+        </div>
+
+        <!-- Özet Bilgiler -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <!-- Toplam Gider -->
+          <div class="bg-gradient-to-r from-red-500 to-red-700 text-white p-6 rounded-2xl shadow-md">
+            <h2 class="text-xl font-semibold mb-2 flex items-center gap-2">💸 Toplam Gider</h2>
+            <p class="text-4xl font-bold">{{ totalAmount.toFixed(2) }} ₺</p>
+          </div>
+
+          <!-- Kategoriye Göre Giderler -->
+          <div class="bg-white border border-gray-100 p-6 rounded-2xl shadow-md">
+            <h2 class="text-xl font-semibold text-slate-800 mb-4">📊 Kategori Bazlı Giderler</h2>
+            <ul class="space-y-1 text-gray-600 text-sm">
+              <li
+                  v-for="(amount, category) in categoryTotals"
+                  :key="category"
+                  class="flex justify-between border-b border-gray-100 py-1"
+              >
+                <span class="font-medium text-slate-700">{{ category }}</span>
+                <span>{{ amount.toFixed(2) }} ₺</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Gider Ekle Butonu -->
+        <div class="text-center">
+          <button
+              @click="showModal = true"
+              class="bg-sky-600 hover:bg-sky-700 transition-colors text-white font-semibold px-6 py-3 rounded-xl shadow-md"
           >
-            <span class="font-medium">{{ category }}</span>
-            <span>{{ amount.toFixed(2) }} ₺</span>
-          </li>
-        </ul>
-      </div>
-    </div>
+            ➕ Yeni Gider Ekle
+          </button>
+        </div>
 
-    <!-- Gider Ekle Butonu -->
-    <div class="mb-6">
-      <button
-          @click="showModal = true"
-          class="bg-blue-600 hover:bg-blue-700 transition-colors text-white font-semibold px-6 py-3 rounded-xl shadow"
-      >
-        + Yeni Gider Ekle
-      </button>
-    </div>
-
-    <!-- Tüm Giderler Tablosu -->
-    <div class="bg-white p-6 rounded-2xl shadow-lg overflow-x-auto">
-      <h2 class="text-xl font-semibold text-gray-700 mb-4">🧾 Tüm Giderler</h2>
-      <table class="w-full text-left text-sm text-gray-700">
-        <thead>
-        <tr class="bg-gray-100">
-          <th class="py-3 px-2">📅 Tarih</th>
-          <th class="py-3 px-2">📂 Kategori</th>
-          <th class="py-3 px-2">📝 Not</th>
-          <th class="py-3 px-2">💰 Tutar</th>
-          <th class="py-3 px-2"></th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr
-            v-for="expense in expenses"
-            :key="expense._id"
-            class="hover:bg-gray-50 border-b"
-        >
-          <td class="py-2 px-2">{{ formatDate(expense.date) }}</td>
-          <td class="py-2 px-2">{{ expense.category }}</td>
-          <td class="py-2 px-2">{{ expense.note }}</td>
-          <td class="py-2 px-2 text-red-600 font-semibold">
-            {{ expense.amount.toFixed(2) }} ₺
-          </td>
-          <td class="py-2 px-2">
-            <button
-                @click="deleteExpense(expense._id)"
-                class="text-red-500 hover:text-red-700 font-semibold"
-                title="Sil"
+        <!-- Giderler Tablosu -->
+        <div class="bg-white border border-gray-100 p-6 rounded-2xl shadow-md overflow-x-auto">
+          <h2 class="text-xl font-semibold text-slate-800 mb-4">🧾 Tüm Giderler</h2>
+          <table class="w-full text-sm text-slate-700">
+            <thead>
+            <tr class="bg-gray-100 text-slate-600">
+              <th class="py-3 px-2 text-left">📅 Tarih</th>
+              <th class="py-3 px-2 text-left">📂 Kategori</th>
+              <th class="py-3 px-2 text-left">📝 Not</th>
+              <th class="py-3 px-2 text-left">💰 Tutar</th>
+              <th class="py-3 px-2 text-center">İşlem</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr
+                v-for="expense in expenses"
+                :key="expense._id"
+                class="hover:bg-sky-50 border-b border-gray-100"
             >
-              ✖
-            </button>
-          </td>
-        </tr>
-        </tbody>
-      </table>
-    </div>
+              <td class="py-2 px-2">{{ formatDate(expense.date) }}</td>
+              <td class="py-2 px-2">{{ expense.category }}</td>
+              <td class="py-2 px-2">{{ expense.note }}</td>
+              <td class="py-2 px-2 text-red-600 font-semibold">
+                {{ expense.amount.toFixed(2) }} ₺
+              </td>
+              <td class="py-2 px-2 text-center">
+                <button
+                    @click="deleteExpense(expense._id)"
+                    class="text-red-500 hover:text-red-700 font-semibold transition"
+                    title="Sil"
+                >
+                  ✖
+                </button>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
 
-    <!-- Modal -->
-    <AddModal :visible="showModal" @close="showModal = false" @add="handleAddExpense" />
+        <!-- Modal -->
+        <AddModal :visible="showModal" @close="showModal = false" @add="handleAddExpense" />
+      </div>
+    </main>
   </div>
 </template>
+
 
 <script setup lang="ts">
 
@@ -197,6 +213,7 @@ function formatDate(dateStr: string): string {
 </script>
 
 <style scoped>
+@reference 'tailwindcss';
 table th,
 table td {
   padding-left: 0.5rem;

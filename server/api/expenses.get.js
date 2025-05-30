@@ -20,8 +20,8 @@ export default defineEventHandler(async (event) => {
         console.error('Express API hata:', err)
 
         return {
-            statusCode: err?.response?.status || 500,  // Handle possible undefined response
-            message: err?.response?.data?.message || 'Sunucu hatası'  // Default message if no specific error
+            statusCode: err?.response?.status || 500,
+            message: err?.response?.data?.message || 'Sunucu hatası'
         }
     }
 })

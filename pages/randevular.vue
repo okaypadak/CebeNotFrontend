@@ -1,59 +1,85 @@
 <template>
-  <div class="bg-gray-100 p-10 m-5 rounded-xl shadow border space-y-4">
-    <Navbar />
-    <h2 class="text-xl font-bold text-gray-800">📅 Dönem Bilgisi</h2>
+  <div class="min-h-screen bg-sky-100 flex flex-col px-4">
+    <!-- ✅ Navbar -->
+    <header>
+      <Navbar />
+    </header>
 
-    <div v-if="hasData">
-      <div v-for="(appointmentEvent, index) in appointmentEvents" :key="index"
-           class="bg-white space-y-1 text-gray-700 text-sm border p-3 rounded mb-4">
-        <p><strong>Tarih:</strong> {{ formatDate(appointmentEvent.date) }}</p>
-        <p><strong>Açıklama:</strong> {{ appointmentEvent.explanation }}</p>
+    <!-- ✅ İçerik -->
+    <main class="flex-grow flex items-start justify-center px-4 py-8">
+      <div class="w-full max-w-5xl bg-white rounded-3xl shadow-2xl p-8 space-y-6">
 
-        <p v-if="getRemainingText(appointmentEvent.date)" class="text-green-700 font-semibold">
-          ⏳ {{ getRemainingText(appointmentEvent.date) }}
-        </p>
-        <p v-else class="text-red-600 font-semibold">🛑 Süre doldu</p>
+        <!-- Başlık -->
+        <div class="text-center">
+          <h2 class="text-3xl font-bold text-sky-700">📅 Dönem Bilgisi</h2>
+          <p class="text-slate-600 text-sm mt-1">Tanımlı dönemler ve kalan süre bilgileri</p>
+        </div>
 
-        <!-- 🚮 Sil Butonu -->
-        <button @click="deleteEvent(appointmentEvent)" class="mt-2 text-red-600 hover:underline text-sm">
-          ❌ Sil
-        </button>
+        <!-- Dönem Listesi -->
+        <div v-if="hasData" class="space-y-6">
+          <div
+              v-for="(appointmentEvent, index) in appointmentEvents"
+              :key="index"
+              class="bg-sky-50 border border-gray-200 p-4 rounded-xl shadow-sm space-y-1"
+          >
+            <p><strong>Tarih:</strong> {{ formatDate(appointmentEvent.date) }}</p>
+            <p><strong>Açıklama:</strong> {{ appointmentEvent.explanation }}</p>
+
+            <p v-if="getRemainingText(appointmentEvent.date)" class="text-green-700 font-semibold">
+              ⏳ {{ getRemainingText(appointmentEvent.date) }}
+            </p>
+            <p v-else class="text-red-600 font-semibold">🛑 Süre doldu</p>
+
+            <button
+                @click="deleteEvent(appointmentEvent)"
+                class="text-sm text-red-600 hover:underline"
+            >
+              ❌ Sil
+            </button>
+          </div>
+        </div>
+        <div v-else class="text-center text-slate-500">📭 Henüz bir dönem verisi bulunamadı.</div>
+
+        <!-- Yeni Dönem Ekleme Formu -->
+        <div class="border-t pt-6">
+          <h3 class="text-xl font-semibold text-slate-800 mb-4 text-center">➕ Yeni Dönem Ekle</h3>
+          <form @submit.prevent="submitCycle" class="grid gap-4 sm:grid-cols-2">
+            <div class="col-span-2 sm:col-span-1">
+              <label class="block text-sm text-slate-600 mb-1">Başlangıç Tarihi</label>
+              <VueDatePicker
+                  v-model="formStart"
+                  :format="'dd-MM-yyyy'"
+                  locale="tr"
+                  input-class="input-field w-full"
+              />
+            </div>
+            <div>
+              <label class="block text-sm text-slate-600 mb-1">Süre (gün)</label>
+              <input type="number" v-model.number="formDays" class="input-field w-full" />
+            </div>
+            <div class="col-span-2">
+              <label class="block text-sm text-slate-600 mb-1">Açıklama</label>
+              <textarea v-model="formExplanation" class="input-field w-full" rows="2" placeholder="Dönem açıklaması..."></textarea>
+            </div>
+            <div class="col-span-2 sm:col-span-1">
+              <label class="block text-sm text-slate-600 mb-1">Tekrar Sıklığı</label>
+              <select v-model="formRepeat" class="input-field w-full">
+                <option value="once">Sadece 1 Kez</option>
+                <option value="daily">Her Gün</option>
+                <option value="weekly">Haftada Bir</option>
+                <option value="monthly">Ayda Bir</option>
+              </select>
+            </div>
+            <div class="col-span-2 text-center">
+              <button type="submit" class="bg-sky-600 text-white px-6 py-2 rounded-lg shadow hover:bg-sky-700 transition">
+                💾 Kaydet
+              </button>
+            </div>
+          </form>
+        </div>
+
       </div>
-    </div>
-    <div v-else>
-      <p>📭 Herhangi bir veri bulunamadı.</p>
-    </div>
-
-    <!-- Yeni dönem ekleme formu -->
-    <div class="mt-6 border-t pt-4">
-      <h3 class="text-md font-semibold mb-2 text-gray-700">Yeni Dönem Ekle</h3>
-      <form @submit.prevent="submitCycle" class="space-y-2">
-        <div>
-          <label class="block text-sm text-gray-600">Başlangıç Tarihi</label>
-          <VueDatePicker v-model="formStart" :format="'dd-MM-yyyy'" locale="tr" />
-        </div>
-        <div>
-          <label class="block text-sm text-gray-600">Süre (gün)</label>
-          <input type="number" v-model.number="formDays" class="bg-white border rounded p-2 w-full" />
-        </div>
-        <div>
-          <label class="block text-sm text-gray-600">Açıklama</label>
-          <textarea v-model="formExplanation" class="bg-white border rounded p-2 w-full" rows="2" placeholder="Dönem açıklaması..."></textarea>
-        </div>
-        <div>
-          <label class="block text-sm text-gray-600">Tekrar Sıklığı</label>
-          <select v-model="formRepeat" class="bg-white border rounded p-2 w-full">
-            <option value="once">Sadece 1 Kez</option>
-            <option value="daily">Her Gün</option>
-            <option value="weekly">Haftada Bir</option>
-            <option value="monthly">Ayda Bir</option>
-          </select>
-        </div>
-        <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
-          Kaydet
-        </button>
-      </form>
-    </div>
+    </main>
   </div>
 </template>
 
@@ -63,7 +89,6 @@ import Navbar from '../pages/components/Navbar.vue'
 import VueDatePicker from '@vuepic/vue-datepicker'
 import '@vuepic/vue-datepicker/dist/main.css'
 
-// Tip tanımı
 interface AppointmentEvent {
   _id: string
   appointmentId: string
@@ -74,7 +99,6 @@ interface AppointmentEvent {
 const appointmentEvents = ref<AppointmentEvent[]>([])
 const hasData = ref<boolean>(true)
 
-// Form verileri
 const formStart = ref<Date>(new Date())
 const formDays = ref<number>(0)
 const formExplanation = ref<string>('')
@@ -83,7 +107,6 @@ const formRepeat = ref<'once' | 'daily' | 'weekly' | 'monthly'>('once')
 onMounted(async () => {
   try {
     const response = await $fetch('/api/appointmentsEvents')
-
     if (Array.isArray(response) && response.length > 0) {
       appointmentEvents.value = response.map((event: any) => ({
         ...event,
@@ -98,7 +121,6 @@ onMounted(async () => {
     hasData.value = false
   }
 })
-
 
 function getRemainingText(endDate: Date | string): string | null {
   if (!endDate) return null
@@ -126,7 +148,6 @@ function getRemainingText(endDate: Date | string): string | null {
 }
 
 async function submitCycle() {
-
   const userId = localStorage.getItem('userId')
 
   try {
@@ -154,20 +175,17 @@ async function submitCycle() {
 
     appointmentEvents.value.unshift(newEvent)
 
-    // Formu sıfırla
     formStart.value = new Date()
     formDays.value = 0
     formExplanation.value = ''
     formRepeat.value = 'once'
     hasData.value = true
-
   } catch (err) {
     console.error('Dönem kaydedilemedi:', err?.data?.message || err.message)
   }
 }
 
-
-async function deleteEvent(app) {
+async function deleteEvent(app: AppointmentEvent) {
   if (!app.appointmentId) {
     console.warn('❌ appointmentId eksik, silme iptal edildi')
     return
@@ -177,14 +195,11 @@ async function deleteEvent(app) {
     await $fetch(`/api/appointments/${app.appointmentId}`, {
       method: 'DELETE'
     })
-
     appointmentEvents.value = appointmentEvents.value.filter(one => one._id !== app._id)
   } catch (err) {
     console.error('Silme işlemi başarısız:', err?.data?.message || err.message)
   }
 }
-
-
 
 function formatDate(date: Date): string {
   const day = String(date.getDate()).padStart(2, '0')
@@ -193,3 +208,20 @@ function formatDate(date: Date): string {
   return `${day}/${month}/${year}`
 }
 </script>
+
+<style scoped>
+@reference 'tailwindcss';
+
+.input-field {
+  @apply bg-gray-50 px-4 py-2.5 border border-gray-300 rounded-md shadow-sm
+  focus:outline-none focus:ring-2 focus:ring-sky-500 transition;
+}
+
+:deep(.dp__input) {
+  background-color: var(--color-gray-50, oklch(98.5% 0.002 247.839));
+  height: 46px !important;
+  line-height: 1.25rem;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+}
+</style>
