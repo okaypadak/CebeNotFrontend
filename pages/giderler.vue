@@ -107,7 +107,7 @@ definePageMeta({
 import { onMounted, ref, computed } from 'vue'
 import { useRoute } from 'vue-router'
 import { $fetch } from 'ofetch'
-import AddModal from '../pages/components/randevuEkle.vue'
+import AddModal from '../pages/components/ekleGider.vue'
 import Navbar from '../pages/components/Navbar.vue'
 
 const user = useState('user')

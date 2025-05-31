@@ -5,7 +5,8 @@
       <form @submit.prevent="submit">
         <input v-model="amount" type="number" placeholder="Tutar" class="w-full mb-2 p-2 border rounded" />
         <input v-model="note" type="text" placeholder="Not" class="w-full mb-2 p-2 border rounded" />
-        <select v-model="category" class="w-full mb-4 p-2 border rounded">
+
+        <select v-model="category" class="w-full mb-2 p-2 border rounded">
           <option value="">Kategori Seç</option>
           <option value="yemek">Yemek</option>
           <option value="ulaşım">Ulaşım</option>
@@ -14,6 +15,9 @@
           <option value="alışveriş">Alışveriş</option>
           <option value="internet">Alışveriş-İnternet</option>
         </select>
+
+        <input v-model="date" type="date" class="w-full mb-4 p-2 border rounded" />
+
         <div class="flex justify-end gap-2">
           <button type="button" @click="$emit('close')" class="px-4 py-2 bg-gray-300 rounded">İptal</button>
           <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded">Ekle</button>
@@ -32,9 +36,15 @@ const emit = defineEmits(['close', 'add'])
 const amount = ref('')
 const note = ref('')
 const category = ref('')
+const date = ref(new Date().toISOString().split('T')[0]) // Bugünün tarihi varsayılan
 
 function submit() {
-  emit('add', { amount: amount.value, note: note.value, category: category.value })
+  emit('add', {
+    amount: amount.value,
+    note: note.value,
+    category: category.value,
+    date: date.value
+  })
   emit('close')
 }
 </script>
