@@ -57,7 +57,7 @@ interface LoginResponse {
 
 async function login(): Promise<void> {
   try {
-    const res = await $fetch<LoginResponse>('/api/login', {
+    const res = await $fetch<LoginResponse>('/api/auth/login', {
       method: 'POST',
       body: {
         username: username.value,

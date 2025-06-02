@@ -82,7 +82,7 @@ async function addPeriod() {
   if (!newPeriod.value.trim()) return
 
   try {
-    await $fetch('/api/periods', {
+    await $fetch('/periods', {
       method: 'POST',
       headers: { Authorization: `Bearer ${token.value}` },
       body: { period: newPeriod.value.trim() }

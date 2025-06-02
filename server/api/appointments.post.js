@@ -6,7 +6,7 @@ export default defineEventHandler(async (event) => {
     const body = await readBody(event)
 
     try {
-        return await ofetch(`${config.apiBaseUrl}/api/appointments`, {
+        return await ofetch(`${config.apiBaseUrl}/appointments`, {
             method: 'POST',
             body
         })

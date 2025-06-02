@@ -9,7 +9,7 @@ export default defineEventHandler(async (event) => {
     const token = headers.authorization
 
     try {
-        return await ofetch(`${config.apiBaseUrl}/api/periods`, {
+        return await ofetch(`${config.apiBaseUrl}/periods`, {
             method: 'GET',
             headers: {
                 Authorization: token

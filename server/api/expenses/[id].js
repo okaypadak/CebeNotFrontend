@@ -7,7 +7,7 @@ export default defineEventHandler(async (event) => {
     const headers = getRequestHeaders(event)
 
     try {
-        return await ofetch(`${config.apiBaseUrl}/api/expenses/${id}`, {
+        return await ofetch(`${config.apiBaseUrl}/expenses/${id}`, {
             method: 'DELETE',
             headers: {
                 Authorization: headers.authorization || ''

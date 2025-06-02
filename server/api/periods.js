@@ -6,7 +6,7 @@ export default defineEventHandler(async (event) => {
     const body = await readBody(event)
 
     try {
-        return await ofetch(`${config.apiBase}/api/periods`, {
+        return await ofetch(`${config.apiBase}/periods`, {
             method: 'POST',
             body
         })

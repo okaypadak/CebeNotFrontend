@@ -6,7 +6,7 @@ export default defineEventHandler(async (event) => {
     const { id } = getRouterParams(event)
 
     try {
-        return await ofetch(`${config.apiBaseUrl}/api/appointments/${id}`, {
+        return await ofetch(`${config.apiBaseUrl}/appointments/${id}`, {
             method: 'DELETE'
         })
 

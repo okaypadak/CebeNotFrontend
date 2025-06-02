@@ -106,7 +106,7 @@ const formRepeat = ref<'once' | 'daily' | 'weekly' | 'monthly'>('once')
 
 onMounted(async () => {
   try {
-    const response = await $fetch('/api/appointmentsEvents')
+    const response = await $fetch('/api/appointment-events')
     if (Array.isArray(response) && response.length > 0) {
       appointmentEvents.value = response.map((event: any) => ({
         ...event,
