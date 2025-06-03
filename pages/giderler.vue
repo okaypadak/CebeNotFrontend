@@ -67,7 +67,7 @@
             <tbody>
             <tr
                 v-for="expense in expenses"
-                :key="expense._id"
+                :key="expense.id"
                 class="hover:bg-sky-50 border-b border-gray-100"
             >
               <td class="py-2 px-2">{{ formatDate(expense.date) }}</td>
@@ -78,7 +78,7 @@
               </td>
               <td class="py-2 px-2 text-center">
                 <button
-                    @click="deleteExpense(expense._id)"
+                    @click="deleteExpense(expense.id)"
                     class="text-red-500 hover:text-red-700 font-semibold transition"
                     title="Sil"
                 >
@@ -114,7 +114,7 @@ const user = useState('user')
 
 // Tip tanımları
 interface Expense {
-  _id: string;
+  id: string;
   date: string;
   category: string;
   note: string;

@@ -55,7 +55,7 @@ definePageMeta({ middleware: ['auth'] })
 import { ref, onMounted } from 'vue'
 
 interface Period {
-  _id: string
+  id: string
   period: string
 }
 
@@ -99,7 +99,7 @@ function goToDashboard(periodObj: Period) {
   navigateTo({
     name: 'giderler',
     query: {
-      periodId: periodObj._id,
+      periodId: periodObj.id,
       period: periodObj.period
     }
   })
